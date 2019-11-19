@@ -2,3 +2,9 @@ server:
   port: 8099
   servlet:
     context-path: /demo
+
+websocket:
+  enabled: true  #开启websocket服务
+  server-path: /websocket  #websocket服务路径
+  url: ws://127.0.0.1:8099/demo/websocket
+
