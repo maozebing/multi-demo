@@ -8,3 +8,7 @@ websocket:
   server-path: /websocket  #websocket服务路径
   url: ws://127.0.0.1:8099/demo/websocket
 
+mqtt:
+  host: tcp://127.0.0.1:1883
+  topic: sample-values/#
+

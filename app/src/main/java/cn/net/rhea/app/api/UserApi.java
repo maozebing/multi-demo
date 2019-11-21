@@ -1,7 +1,10 @@
 package cn.net.rhea.app.api;
 
+import cn.hutool.json.JSONObject;
+import cn.net.rhea.app.mqtt.MqttPub;
 import cn.net.rhea.common.model.User;
 import cn.net.rhea.driver.HuaWeiDerver;
+import org.eclipse.paho.client.mqttv3.MqttException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,10 +31,23 @@ public class UserApi {
 
     @Resource
     private HuaWeiDerver huaWeiDerver;
+    @Resource
+    private MqttPub mqttPub;
 
     @GetMapping()
-    public ResponseEntity listDic() {
+    public ResponseEntity listDic() throws MqttException {
         List<User> list = huaWeiDerver.listUser();
+
+        JSONObject jsonObject=new JSONObject();
+        jsonObject.put("monitoringUnit","u-wei");
+        jsonObject.put("sampleUnit","rack-2");
+        jsonObject.put("channel","led-3");
+        jsonObject.put("parameters",new JSONObject().put("value", 0x05));
+        jsonObject.put("timeout",1000);
+        jsonObject.put("startTime","2018-10-01T12:00:00Z");
+        jsonObject.put("phase","executing");
+
+        mqttPub.publish("command/u-wei/rack-2/led-3",jsonObject.toString());
 
 
         return ResponseEntity.ok(list);
